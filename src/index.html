@@ -164,11 +164,15 @@
 
         searchStopButton.addEventListener('click', function() {
             Board.clearReplay();
+            searchResultDiv.innerHTML = '';
+
             window.searchStopped = true;
             setTimeout(function() {
                 window.searchStopped = false;
             }, 5);
             searchStepOptions = null;
+
+            Board.draw(game.state);
         }, false);
 
         function searchCallback(err, options) {
