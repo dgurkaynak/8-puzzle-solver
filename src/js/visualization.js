@@ -50,8 +50,9 @@ Visualization.importData = function(expandedNodes, frontierList, opt_winnerNode,
             return;
 
         data.nodes.push({
-            id: node.state,
-            label: node.state,
+            id: node.state,//012345678
+            // label: node.state.splice(6, 0, '\n').splice(3, 0, '\n') + '\n MD: ' + node.game.getManhattanDistance(),
+            label: node.state + '\n (MD: ' + node.game.getManhattanDistance() + ')',
             color: winners[node.state] ? (opt_winnerColor || '#ccff33') : color
         });
 

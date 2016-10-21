@@ -40,6 +40,8 @@
             <select id="searchType">
                 <option value="breadthFirst">Breadth-First</option>
                 <option value="depthFirst">Depth-First</option>
+                <option value="greedyBest">Greedy-Best</option>
+                <option value="aStar">A*</option>
             </select>
             <label>Iteration Limit</label>
             <input type="number" id="iterationLimit" value="10000">
@@ -65,6 +67,7 @@
 
     <script src="../node_modules/lodash/lodash.min.js"></script>
     <script src="../node_modules/vis/dist/vis.min.js"></script>
+    <script src="./js/utils.js"></script>
     <script src="./js/node.js"></script>
     <script src="./js/game.js"></script>
     <script src="./js/board.js"></script>
@@ -122,10 +125,12 @@
                 expandCheckOptimization: expandedNodeCheckbox.checked,
                 type: searchTypeSelectbox.value,
                 callback: function(err, options) {
-                    searchResultDiv.innerHTML = (err ? err : 'Solved!') + ' <br/><br />' +
-                        ('Iteration: ' + options.iteration) + '<br/>' +
-                        ('Expanded nodes: ' + Object.keys(options.expandedNodes).length) + '<br/>' +
-                        ('Frontier list: ' + options.frontierList.length);
+                    var expandedNodesLength = Object.keys(options.expandedNodes).length;
+                    searchResultDiv.innerHTML = (err ? err : 'Solution depth: ' + options.node.depth) + ' <br/>' +
+                        ('Iteration: ' + options.iteration) + '<br/><br/>' +
+                        ('Expanded nodes: ' + expandedNodesLength) + '<br/>' +
+                        ('Frontier nodes: ' + options.frontierList.length) + '<br/>' +
+                        ('Total nodes: ' + (expandedNodesLength + options.frontierList.length));
 
                     //game.state = options.node.state;
                     Board.draw(options.node.state);
@@ -168,10 +173,12 @@
 
                     Board.draw(options.node.state);
 
-                    searchResultDiv.innerHTML = 'Step <br/><br />' +
-                        ('Iteration: ' + options.iteration) + '<br/>' +
-                        ('Expanded nodes: ' + Object.keys(options.expandedNodes).length) + '<br/>' +
-                        ('Frontier list: ' + (options.frontierList.length + 1));
+                    var expandedNodesLength = Object.keys(options.expandedNodes).length;
+                    searchResultDiv.innerHTML = 'Stepped <br/>' +
+                        ('Iteration: ' + options.iteration) + '<br/><br/>' +
+                        ('Expanded nodes: ' + expandedNodesLength) + '<br/>' +
+                        ('Frontier nodes: ' + options.frontierList.length) + '<br/>' +
+                        ('Total nodes: ' + (expandedNodesLength + options.frontierList.length));
 
                     // Draw
                     if (visualizationCheckbox.checked) {
@@ -185,10 +192,12 @@
                     Visualization.draw(visualizationData);
                 },
                 callback: function(err, options) {
-                    searchResultDiv.innerHTML = (err ? err : 'Solved!') + ' <br/><br />' +
-                        ('Iteration: ' + options.iteration) + '<br/>' +
-                        ('Expanded nodes: ' + Object.keys(options.expandedNodes).length) + '<br/>' +
-                        ('Frontier list: ' + options.frontierList.length);
+                    var expandedNodesLength = Object.keys(options.expandedNodes).length;
+                    searchResultDiv.innerHTML = (err ? err : 'Solution depth: ' + options.node.depth) + ' <br/>' +
+                        ('Iteration: ' + options.iteration) + '<br/><br/>' +
+                        ('Expanded nodes: ' + expandedNodesLength) + '<br/>' +
+                        ('Frontier nodes: ' + options.frontierList.length) + '<br/>' +
+                        ('Total nodes: ' + (expandedNodesLength + options.frontierList.length));
 
                     //game.state = options.node.state;
                     Board.draw(options.node.state);

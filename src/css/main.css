@@ -24,10 +24,13 @@ html, margin {
     width: 50px;
     height: 50px;
     box-sizing: border-box;
-    -webkit-transition: all 0ms;
-    transition: all 0ms;
     top: 0;
     left: 0;
+}
+
+#board.animation .board-item {
+    -webkit-transition: all 100ms;
+    transition: all 100ms;
 }
 
 #controls {

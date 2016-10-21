@@ -1,6 +1,8 @@
 var SearchType = {
     BREADTH_FIRST: 'breadthFirst',
-    DEPTH_FIRST: 'depthFirst'
+    DEPTH_FIRST: 'depthFirst',
+    GREEDY_BEST: 'greedyBest',
+    A_STAR: 'aStar'
 };
 
 function search(opt_options) {
@@ -95,6 +97,22 @@ function getNextNode(options) {
             return options.frontierList.shift();
         case SearchType.DEPTH_FIRST:
             return options.frontierList.pop();
+        case SearchType.GREEDY_BEST:
+            var bestNode = _.minBy(options.frontierList, function(node) {
+                return node.game.getManhattanDistance();
+            });
+
+            _.remove(options.frontierList, bestNode);
+
+            return bestNode;
+        case SearchType.A_STAR:
+            var bestNode = _.minBy(options.frontierList, function(node) {
+                return node.game.getManhattanDistance() + node.cost;
+            });
+
+            _.remove(options.frontierList, bestNode);
+
+            return bestNode;
         default:
             throw new Error('Unsupported search type');
     }
