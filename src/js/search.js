@@ -1,5 +1,6 @@
 var SearchType = {
     BREADTH_FIRST: 'breadthFirst',
+    UNIFORM_COST: 'uniformCost',
     DEPTH_FIRST: 'depthFirst',
     GREEDY_BEST: 'greedyBest',
     A_STAR: 'aStar'
@@ -97,6 +98,14 @@ function getNextNode(options) {
             return options.frontierList.shift();
         case SearchType.DEPTH_FIRST:
             return options.frontierList.pop();
+        case SearchType.UNIFORM_COST:
+            var bestNode = _.minBy(options.frontierList, function(node) {
+                return node.cost;
+            });
+
+            _.remove(options.frontierList, bestNode);
+
+            return bestNode;
         case SearchType.GREEDY_BEST:
             var bestNode = _.minBy(options.frontierList, function(node) {
                 return node.game.getManhattanDistance();
