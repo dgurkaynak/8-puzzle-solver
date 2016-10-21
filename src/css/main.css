@@ -29,8 +29,8 @@ html, margin {
 }
 
 #board.animation .board-item {
-    -webkit-transition: all 100ms;
-    transition: all 100ms;
+    -webkit-transition: all 500ms;
+    transition: all 500ms;
 }
 
 #controls {

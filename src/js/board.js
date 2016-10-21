@@ -25,3 +25,31 @@ Board.draw = function(state) {
         element.style.left = (column * element.offsetWidth) + 'px';
     });
 }
+
+Board.replayTimeout = null;
+Board.replayAnimationTimeout = null;
+
+Board.replay = function(moves) {
+    Board.clearReplay();
+
+    var initialState = moves.shift();
+    Board.draw(initialState);
+
+    var animate = function(moves) {
+        var move = moves.shift();
+        if (!move) return boardDiv.classList.remove('animation');
+        Board.draw(move);
+        Board.replayAnimationTimeout = setTimeout(animate.bind(null, moves), 500);
+    };
+
+    Board.replayTimeout = setTimeout(function() {
+        animate(moves);
+    }, 1000);
+};
+
+
+Board.clearReplay = function() {
+    clearTimeout(Board.replayTimeout);
+    clearTimeout(Board.replayAnimationTimeout);
+    boardDiv.classList.remove('animation');
+};

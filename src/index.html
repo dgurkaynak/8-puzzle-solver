@@ -80,6 +80,7 @@
         var game = new Game();
         Board.draw(game.state);
 
+        var boardDiv = document.getElementById('board');
         var randomizeButton = document.getElementById('randomize');
         var customInputButton = document.getElementById('customInput');
         var searchTypeSelectbox = document.getElementById('searchType');
@@ -95,16 +96,21 @@
         var searchStepOptions = null;
 
         randomizeButton.addEventListener('click', function() {
+            Board.clearReplay();
             game.randomize();
             Board.draw(game.state);
+            searchResultDiv.innerHTML = '';
         }, false);
 
         customInputButton.addEventListener('click', function() {
+            Board.clearReplay();
             game.state = prompt('New game state like: "012345678"');
             Board.draw(game.state);
+            searchResultDiv.innerHTML = '';
         }, false);
 
         searchButton.addEventListener('click', function() {
+            Board.clearReplay();
             searchStepOptions = null;
 
             var initialNode = new Node({state: game.state});
@@ -125,31 +131,13 @@
                 depthLimit: depthLimit,
                 expandCheckOptimization: expandedNodeCheckbox.checked,
                 type: searchTypeSelectbox.value,
-                callback: function(err, options) {
-                    var expandedNodesLength = Object.keys(options.expandedNodes).length;
-                    searchResultDiv.innerHTML = (err ? err : 'Solution depth: ' + options.node.depth) + ' <br/>' +
-                        ('Iteration: ' + options.iteration) + '<br/><br/>' +
-                        ('Expanded nodes: ' + expandedNodesLength) + '<br/>' +
-                        ('Frontier nodes: ' + options.frontierList.length) + '<br/>' +
-                        ('Total nodes: ' + (expandedNodesLength + options.frontierList.length));
-
-                    //game.state = options.node.state;
-                    Board.draw(options.node.state);
-
-                    // Draw
-                    if (visualizationCheckbox.checked) {
-                        var visualizationData = Visualization.importData(
-                            options.expandedNodes,
-                            options.frontierList,
-                            err ? null : options.node
-                        );
-                        Visualization.draw(visualizationData);
-                    }
-                }
+                callback: searchCallback
             });
         }, false);
 
         searchStepButton.addEventListener('click', function() {
+            Board.clearReplay();
+
             if (searchStepOptions)
                 return search(searchStepOptions);
 
@@ -169,57 +157,88 @@
                 depthLimit: depthLimit,
                 expandCheckOptimization: expandedNodeCheckbox.checked,
                 type: searchTypeSelectbox.value,
-                stepCallback: function(options) {
-                    searchStepOptions = options;
-
-                    Board.draw(options.node.state);
-
-                    var expandedNodesLength = Object.keys(options.expandedNodes).length;
-                    searchResultDiv.innerHTML = 'Stepped <br/>' +
-                        ('Iteration: ' + options.iteration) + '<br/><br/>' +
-                        ('Expanded nodes: ' + expandedNodesLength) + '<br/>' +
-                        ('Frontier nodes: ' + options.frontierList.length) + '<br/>' +
-                        ('Total nodes: ' + (expandedNodesLength + options.frontierList.length));
-
-                    // Draw
-                    if (visualizationCheckbox.checked) {
-                        var visualizationData = Visualization.importData(
-                            options.expandedNodes,
-                            options.frontierList,
-                            options.node,
-                            '#ffb366'
-                        );
-                    }
-                    Visualization.draw(visualizationData);
-                },
-                callback: function(err, options) {
-                    var expandedNodesLength = Object.keys(options.expandedNodes).length;
-                    searchResultDiv.innerHTML = (err ? err : 'Solution depth: ' + options.node.depth) + ' <br/>' +
-                        ('Iteration: ' + options.iteration) + '<br/><br/>' +
-                        ('Expanded nodes: ' + expandedNodesLength) + '<br/>' +
-                        ('Frontier nodes: ' + options.frontierList.length) + '<br/>' +
-                        ('Total nodes: ' + (expandedNodesLength + options.frontierList.length));
-
-                    //game.state = options.node.state;
-                    Board.draw(options.node.state);
-
-                    // Draw
-                    if (visualizationCheckbox.checked) {
-                        var visualizationData = Visualization.importData(
-                            options.expandedNodes,
-                            options.frontierList,
-                            err ? null : options.node
-                        );
-                        Visualization.draw(visualizationData);
-                    }
-                }
+                stepCallback: stepCallback,
+                callback: searchCallback
             });
         }, false);
 
         searchStopButton.addEventListener('click', function() {
+            Board.clearReplay();
             window.searchStopped = true;
+            setTimeout(function() {
+                window.searchStopped = false;
+            }, 5);
             searchStepOptions = null;
         }, false);
+
+        function searchCallback(err, options) {
+            var expandedNodesLength = Object.keys(options.expandedNodes).length;
+            searchResultDiv.innerHTML = (err ? err : 'Solved! Depth: ' + options.node.depth) + ' <br/>' +
+                ('Iteration: ' + options.iteration) + '<br/><br/>' +
+                ('Expanded nodes: ' + expandedNodesLength) + '<br/>' +
+                ('Frontier nodes: ' + options.frontierList.length) + '<br/>' +
+                ('Total nodes: ' + (expandedNodesLength + options.frontierList.length)) +
+                (err ? '' : '<br/><br/><button onclick="replayWinnerNode()">Replay solution</button>');
+
+            window.winnerNode = err ? null : options.node
+
+            //game.state = options.node.state;
+            Board.draw(options.node.state);
+
+            // Draw
+            if (visualizationCheckbox.checked) {
+                var visualizationData = Visualization.importData(
+                    options.expandedNodes,
+                    options.frontierList,
+                    err ? null : options.node
+                );
+                Visualization.draw(visualizationData);
+            }
+        }
+
+        function stepCallback(options) {
+            searchStepOptions = options;
+
+            Board.draw(options.node.state);
+
+            var expandedNodesLength = Object.keys(options.expandedNodes).length;
+            searchResultDiv.innerHTML = 'Stepped <br/>' +
+                ('Iteration: ' + options.iteration) + '<br/><br/>' +
+                ('Expanded nodes: ' + expandedNodesLength) + '<br/>' +
+                ('Frontier nodes: ' + options.frontierList.length) + '<br/>' +
+                ('Total nodes: ' + (expandedNodesLength + options.frontierList.length));
+
+            // Draw
+            if (visualizationCheckbox.checked) {
+                var visualizationData = Visualization.importData(
+                    options.expandedNodes,
+                    options.frontierList,
+                    options.node,
+                    '#ffb366'
+                );
+            }
+            Visualization.draw(visualizationData);
+        }
+
+        function replayWinnerNode() {
+            if (!window.winnerNode)
+                return alert('Winner node could not found');
+
+            Board.draw(game.state);
+            setTimeout(function() {
+                boardDiv.classList.add('animation');
+            }, 5);
+
+            var moves = [];
+
+            var traverse = function(node) {
+                moves.unshift(node.state);
+                if (node.parent) traverse(node.parent)
+            }
+
+            traverse(window.winnerNode);
+            Board.replay(moves);
+        }
     </script>
 </body>
 </html>
