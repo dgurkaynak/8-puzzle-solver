@@ -1,0 +1,117 @@
+html, margin {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+#board {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    top: 0;
+    left: 0;
+    /*box-sizing: border-box;*/
+    border: 10px solid #ccc;
+}
+
+.board-item {
+    position: absolute;
+    border: 2px solid black;
+    font-size: 36px;
+    font-weight: 800;
+    line-height: 46px;
+    text-align: center;
+    width: 50px;
+    height: 50px;
+    box-sizing: border-box;
+    -webkit-transition: all 0ms;
+    transition: all 0ms;
+    top: 0;
+    left: 0;
+}
+
+#controls {
+    position: absolute;
+    width: 170px;
+    top: 170px;
+    left: 0;
+    bottom: 0;
+}
+
+#controls button, select {
+    width: 100%;
+}
+
+#controls input[type="number"] {
+    width: 97%;
+}
+
+#controls .heading {
+    background: #333;
+    color: #fff;
+    font-weight: bold;
+    text-align: center;
+    line-height: 150%;
+}
+
+#controls label {
+    display: block;
+    background: #fff;
+    color: #333;
+    text-align: left;
+    line-height: 150%;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+#visualization {
+    position: absolute;
+    left: 170px;
+    top: 0;
+    bottom: 0;
+    right: 0;
+}
+
+.vis-configuration-wrapper {
+    display: none !important;
+}
+
+#searchResult {
+    font-size: 12px;
+}
+
+#controls #search {
+    width: 67%;
+    display: inline-block;
+    background: #99cc00;
+    border: 0;
+    color: #fff;
+    border-radius: 3px;
+    line-height: 150%;
+    margin: 1px 0;
+}
+
+#controls #searchStop {
+    width: 30%;
+    display: inline-block;
+    background: #ff6666;
+    border: 0;
+    color: #fff;
+    border-radius: 3px;
+    line-height: 150%;
+    margin: 1px 0;
+}
+
+#controls #searchStep {
+    width: 100%;
+    background: #ffb366;
+    border: 0;
+    color: #fff;
+    border-radius: 3px;
+    line-height: 150%;
+    margin: 1px 0;
+}
+
+#controls .content {
+    margin: 5px;
+}

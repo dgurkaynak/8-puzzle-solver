@@ -1,0 +1,24 @@
+{
+  "name": "8-puzzle-solver",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dgurkaynak/8-puzzle-solver.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dgurkaynak/8-puzzle-solver/issues"
+  },
+  "homepage": "https://github.com/dgurkaynak/8-puzzle-solver#readme",
+  "dependencies": {
+    "lodash": "^4.16.4",
+    "vis": "^4.16.1"
+  }
+}

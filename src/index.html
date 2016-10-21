@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+
+    <title>8-Puzzle Solver</title>
+    <meta name="description" content="8-puzzle solver with various tree search techniques">
+    <meta name="author" content="Deniz Gurkaynak">
+
+    <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css">
+    <link rel="stylesheet" href="./css/main.css">
+
+    <!--[if lt IE 9]>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+    <div id="board">
+        <div id="board-item-1" class="board-item">1</div>
+        <div id="board-item-2" class="board-item">2</div>
+        <div id="board-item-3" class="board-item">3</div>
+        <div id="board-item-4" class="board-item">4</div>
+        <div id="board-item-5" class="board-item">5</div>
+        <div id="board-item-6" class="board-item">6</div>
+        <div id="board-item-7" class="board-item">7</div>
+        <div id="board-item-8" class="board-item">8</div>
+    </div>
+    <div id="visualization"></div>
+    <div id="controls">
+        <div class="heading">Game State</div>
+        <div class="content">
+            <button id="randomize">Random</button>
+            <button id="customInput">Custom Input</button>
+        </div>
+
+        <div class="heading">Search</div>
+        <div class="content">
+            <label>Type</label>
+            <select id="searchType">
+                <option value="breadthFirst">Breadth-First</option>
+                <option value="depthFirst">Depth-First</option>
+            </select>
+            <label>Iteration Limit</label>
+            <input type="number" id="iterationLimit" value="10000">
+            <label>Depth Limit</label>
+            <input type="number" id="depthLimit" value="0">
+            <label>
+                <input type="checkbox" id="visualizationCheck" checked>
+                Visualization
+            </label>
+            <label>
+                <input type="checkbox" id="expandedNodeCheck">
+                Early check optimization
+            </label>
+
+            <button id="searchStep">Seach one step</button>
+            <button id="search">Search</button>
+            <button id="searchStop">Stop</button>
+        </div>
+
+        <div class="heading">Search Result</div>
+        <div id="searchResult" class="content"></div>
+    </div>
+
+    <script src="../node_modules/lodash/lodash.min.js"></script>
+    <script src="../node_modules/vis/dist/vis.min.js"></script>
+    <script src="./js/node.js"></script>
+    <script src="./js/game.js"></script>
+    <script src="./js/board.js"></script>
+    <script src="./js/visualization.js"></script>
+    <script src="./js/search.js"></script>
+
+    <script>
+        //var game = new Game('203156478');
+        var game = new Game();
+        Board.draw(game.state);
+
+        var randomizeButton = document.getElementById('randomize');
+        var customInputButton = document.getElementById('customInput');
+        var searchTypeSelectbox = document.getElementById('searchType');
+        var iterationLimitInput = document.getElementById('iterationLimit');
+        var depthLimitInput = document.getElementById('depthLimit');
+        var searchButton = document.getElementById('search');
+        var searchStopButton = document.getElementById('searchStop');
+        var searchStepButton = document.getElementById('searchStep');
+        var expandedNodeCheckbox = document.getElementById('expandedNodeCheck');
+        var searchResultDiv = document.getElementById('searchResult');
+        var visualizationCheckbox = document.getElementById('visualizationCheck');
+
+        randomizeButton.addEventListener('click', function() {
+            game.randomize();
+            Board.draw(game.state);
+        }, false);
+
+        customInputButton.addEventListener('click', function() {
+            game.state = prompt('New game state like: "012345678"');
+            Board.draw(game.state);
+        }, false);
+
+        searchButton.addEventListener('click', function() {
+            var initialNode = new Node({state: game.state});
+            var iterationLimit = parseInt(iterationLimitInput.value, 10);
+            var depthLimit = parseInt(depthLimitInput.value, 10);
+
+            if (isNaN(iterationLimit))
+                return alert('Invalid iteration limit');
+
+            if (isNaN(depthLimit))
+                return alert('Invalid depth limit');
+
+            searchResultDiv.innerHTML = '';
+
+            search({
+                node: initialNode,
+                iterationLimit: iterationLimit,
+                depthLimit: depthLimit,
+                expandCheckOptimization: expandedNodeCheckbox.checked,
+                type: searchTypeSelectbox.value,
+                callback: function(err, options) {
+                    if (err)
+                        console.log(err);
+                    else
+                        console.log('Solved', options.node);
+
+                    console.log('Expanded nodes: ', Object.keys(options.expandedNodes).length);
+                    console.log('Frontier list: ', options.frontierList.length);
+
+                    searchResultDiv.innerHTML = (err ? err : 'Solved!') + ' <br/><br />' +
+                        ('Iteration: ' + options.iteration) + '<br/>' +
+                        ('Expanded nodes: ' + Object.keys(options.expandedNodes).length) + '<br/>' +
+                        ('Frontier list: ' + options.frontierList.length);
+
+                    //game.state = options.node.state;
+                    Board.draw(options.node.state);
+
+                    // Draw
+                    if (visualizationCheckbox.checked) {
+                        var visualizationData = Visualization.importData(
+                            options.expandedNodes,
+                            options.frontierList,
+                            err ? null : options.node
+                        );
+                        Visualization.draw(visualizationData);
+                    }
+                }
+            });
+        }, false);
+
+        var searchStepOptions = null;
+        searchStepButton.addEventListener('click', function() {
+            if (searchStepOptions)
+                return search(searchStepOptions);
+
+            var initialNode = new Node({state: game.state});
+            var iterationLimit = parseInt(iterationLimitInput.value, 10);
+            var depthLimit = parseInt(depthLimitInput.value, 10);
+
+            if (isNaN(iterationLimit))
+                return alert('Invalid iteration limit');
+
+            if (isNaN(depthLimit))
+                return alert('Invalid depth limit');
+
+            search({
+                node: initialNode,
+                iterationLimit: iterationLimit,
+                depthLimit: depthLimit,
+                expandCheckOptimization: expandedNodeCheckbox.checked,
+                type: searchTypeSelectbox.value,
+                stepCallback: function(options) {
+                    searchStepOptions = options;
+
+                    Board.draw(options.node.state);
+
+                    // Draw
+                    if (visualizationCheckbox.checked) {
+                        var visualizationData = Visualization.importData(
+                            options.expandedNodes,
+                            options.frontierList,
+                            options.node,
+                            '#ffb366'
+                        );
+                    }
+                    Visualization.draw(visualizationData);
+                },
+                callback: function(err, options) {
+                    if (err)
+                        console.log(err);
+                    else
+                        console.log('Solved', options.node);
+
+                    console.log('Expanded nodes: ', Object.keys(options.expandedNodes).length);
+                    console.log('Frontier list: ', options.frontierList.length);
+
+                    searchResultDiv.innerHTML = (err ? err : 'Solved!') + ' <br/><br />' +
+                        ('Iteration: ' + options.iteration) + '<br/>' +
+                        ('Expanded nodes: ' + Object.keys(options.expandedNodes).length) + '<br/>' +
+                        ('Frontier list: ' + options.frontierList.length);
+
+                    //game.state = options.node.state;
+                    Board.draw(options.node.state);
+
+                    // Draw
+                    if (visualizationCheckbox.checked) {
+                        var visualizationData = Visualization.importData(
+                            options.expandedNodes,
+                            options.frontierList,
+                            err ? null : options.node
+                        );
+                        Visualization.draw(visualizationData);
+                    }
+                }
+            });
+        }, false);
+
+        searchStopButton.addEventListener('click', function() {
+            window.searchStopped = true;
+        }, false);
+    </script>
+</body>
+</html>
