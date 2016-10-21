@@ -88,6 +88,8 @@
         var searchResultDiv = document.getElementById('searchResult');
         var visualizationCheckbox = document.getElementById('visualizationCheck');
 
+        var searchStepOptions = null;
+
         randomizeButton.addEventListener('click', function() {
             game.randomize();
             Board.draw(game.state);
@@ -99,6 +101,8 @@
         }, false);
 
         searchButton.addEventListener('click', function() {
+            searchStepOptions = null;
+
             var initialNode = new Node({state: game.state});
             var iterationLimit = parseInt(iterationLimitInput.value, 10);
             var depthLimit = parseInt(depthLimitInput.value, 10);
@@ -118,14 +122,6 @@
                 expandCheckOptimization: expandedNodeCheckbox.checked,
                 type: searchTypeSelectbox.value,
                 callback: function(err, options) {
-                    if (err)
-                        console.log(err);
-                    else
-                        console.log('Solved', options.node);
-
-                    console.log('Expanded nodes: ', Object.keys(options.expandedNodes).length);
-                    console.log('Frontier list: ', options.frontierList.length);
-
                     searchResultDiv.innerHTML = (err ? err : 'Solved!') + ' <br/><br />' +
                         ('Iteration: ' + options.iteration) + '<br/>' +
                         ('Expanded nodes: ' + Object.keys(options.expandedNodes).length) + '<br/>' +
@@ -147,7 +143,6 @@
             });
         }, false);
 
-        var searchStepOptions = null;
         searchStepButton.addEventListener('click', function() {
             if (searchStepOptions)
                 return search(searchStepOptions);
@@ -173,6 +168,11 @@
 
                     Board.draw(options.node.state);
 
+                    searchResultDiv.innerHTML = 'Step <br/><br />' +
+                        ('Iteration: ' + options.iteration) + '<br/>' +
+                        ('Expanded nodes: ' + Object.keys(options.expandedNodes).length) + '<br/>' +
+                        ('Frontier list: ' + (options.frontierList.length + 1));
+
                     // Draw
                     if (visualizationCheckbox.checked) {
                         var visualizationData = Visualization.importData(
@@ -185,14 +185,6 @@
                     Visualization.draw(visualizationData);
                 },
                 callback: function(err, options) {
-                    if (err)
-                        console.log(err);
-                    else
-                        console.log('Solved', options.node);
-
-                    console.log('Expanded nodes: ', Object.keys(options.expandedNodes).length);
-                    console.log('Frontier list: ', options.frontierList.length);
-
                     searchResultDiv.innerHTML = (err ? err : 'Solved!') + ' <br/><br />' +
                         ('Iteration: ' + options.iteration) + '<br/>' +
                         ('Expanded nodes: ' + Object.keys(options.expandedNodes).length) + '<br/>' +
@@ -216,6 +208,7 @@
 
         searchStopButton.addEventListener('click', function() {
             window.searchStopped = true;
+            searchStepOptions = null;
         }, false);
     </script>
 </body>
