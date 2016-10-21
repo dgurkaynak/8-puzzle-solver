@@ -34,12 +34,14 @@ Board.replay = function(moves) {
 
     var initialState = moves.shift();
     Board.draw(initialState);
+    window.network.selectNodes([initialState]);
 
     var animate = function(moves) {
         var move = moves.shift();
         if (!move) return boardDiv.classList.remove('animation');
         Board.draw(move);
-        Board.replayAnimationTimeout = setTimeout(animate.bind(null, moves), 500);
+        window.network.selectNodes([move]);
+        Board.replayAnimationTimeout = setTimeout(animate.bind(null, moves), 1000);
     };
 
     Board.replayTimeout = setTimeout(function() {

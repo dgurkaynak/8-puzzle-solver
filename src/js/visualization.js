@@ -30,9 +30,12 @@ Visualization.draw = function(data) {
         }
     };
 
-    var network = new vis.Network(Visualization.element, data, options);
-    network.on('click', function (params) {
-        if (params.nodes.length > 0) Board.draw(params.nodes[0]);
+    window.network = new vis.Network(Visualization.element, data, options);
+    window.network.on('click', function (params) {
+        if (params.nodes.length > 0) {
+            Board.draw(params.nodes[0]);
+            Board.clearReplay();
+        }
     });
 };
 
