@@ -2,6 +2,7 @@ var SearchType = {
     BREADTH_FIRST: 'breadthFirst',
     UNIFORM_COST: 'uniformCost',
     DEPTH_FIRST: 'depthFirst',
+    ITERATIVE_DEEPENING: 'iterativeDeepening',
     GREEDY_BEST: 'greedyBest',
     A_STAR: 'aStar'
 };
@@ -17,7 +18,9 @@ function search(opt_options) {
         expandCheckOptimization: false,
         callback: function() {},
         stepCallback: null,
-        type: SearchType.BREADTH_FIRST
+        type: SearchType.BREADTH_FIRST,
+        maxFrontierListLength: 0,
+        iterativeDeepeningIndex: 0
     }, opt_options || {});
 
     Board.draw(options.node.state);
@@ -32,6 +35,10 @@ function search(opt_options) {
 
     // Filter just-expanded nodes
     var expandedUnexploredList = expandedList.filter(function(node) {
+        // Check iterative deeping index
+        if (options.type == SearchType.ITERATIVE_DEEPENING && node.depth > options.iterativeDeepeningIndex)
+            return false;
+
         // Check depth
         if (options.depthLimit && node.depth > options.depthLimit)
             return false;
@@ -53,6 +60,7 @@ function search(opt_options) {
 
     // Add filtered just-expanded nodes into frontier list
     options.frontierList = options.frontierList.concat(expandedUnexploredList);
+    options.maxFrontierListLength = Math.max(options.maxFrontierListLength, options.frontierList.length);
 
     // Check whether desired state is in just-expanded list
     if (options.expandCheckOptimization) {
@@ -106,6 +114,23 @@ function getNextNode(options) {
             _.remove(options.frontierList, bestNode);
 
             return bestNode;
+        case SearchType.ITERATIVE_DEEPENING:
+            var nextNode = options.frontierList.pop();
+
+            // Start from top
+            if (!nextNode) {
+                options.iterativeDeepeningIndex++;
+
+                if (options.depthLimit && options.iterativeDeepeningIndex > options.depthLimit)
+                    return;
+
+                options.frontierList = [];
+                options.expandedNodes = {};
+
+                return new Node({state: game.state});
+            }
+
+            return nextNode;
         case SearchType.GREEDY_BEST:
             var bestNode = _.minBy(options.frontierList, function(node) {
                 return node.game.getManhattanDistance();

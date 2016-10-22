@@ -41,6 +41,7 @@
                 <option value="breadthFirst">Breadth-First</option>
                 <option value="uniformCost">Uniform-Cost</option>
                 <option value="depthFirst">Depth-First</option>
+                <option value="iterativeDeepening">Iterative-Deepening</option>
                 <option value="greedyBest">Greedy-Best</option>
                 <option value="aStar">A*</option>
             </select>
@@ -181,7 +182,7 @@
                 ('Iteration: ' + options.iteration) + '<br/><br/>' +
                 ('Expanded nodes: ' + expandedNodesLength) + '<br/>' +
                 ('Frontier nodes: ' + options.frontierList.length) + '<br/>' +
-                ('Total nodes: ' + (expandedNodesLength + options.frontierList.length)) +
+                ('Max frontier nodes: ' + options.maxFrontierListLength) +
                 (err ? '' : '<br/><br/><button onclick="replayWinnerNode()">Replay solution</button>');
 
             window.winnerNode = err ? null : options.node
