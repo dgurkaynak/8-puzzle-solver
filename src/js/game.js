@@ -11,6 +11,9 @@ Game.Actions = {
 };
 
 
+Game.DesiredState = '123456780';
+
+
 Game.prototype.getAvaliableActionsAndStates = function() {
     var result = {};
 
@@ -56,13 +59,33 @@ Game.prototype.getNextState = function(action) {
 
 
 Game.prototype.isFinished = function() {
-    return this.state == '123456780';
+    return this.state == Game.DesiredState;
 };
 
 
 Game.prototype.randomize = function() {
-    var stateArr = this.state.split('');
-    this.state = stateArr.sort(function() { return 0.5 - Math.random() }).join('');
+    var that = this;
+    var states = {};
+    var iteration = parseInt(prompt('How many iterations?'));
+
+    if (!iteration || isNaN(iteration))
+        return alert('Invalid iteration count, please enter a number');
+
+    this.state = Game.DesiredState;
+    states[this.state] = true;
+
+    var randomNextState = function() {
+        var state = _.sample(that.getAvaliableActionsAndStates());
+
+        if (states[state])
+            return randomNextState();
+
+        return state;
+    }
+
+    _.times(iteration, function() {
+        that.state = randomNextState();
+    });
 };
 
 
