@@ -66,7 +66,7 @@ Game.prototype.isFinished = function() {
 Game.prototype.randomize = function() {
     var that = this;
     var states = {};
-    var iteration = parseInt(prompt('How many iterations?'));
+    var iteration = parseInt(prompt('How many random moves from desired state?'));
 
     if (!iteration || isNaN(iteration))
         return alert('Invalid iteration count, please enter a number');
