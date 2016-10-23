@@ -39,6 +39,7 @@ html, margin {
     top: 170px;
     left: 0;
     bottom: 0;
+    overflow-y: auto;
 }
 
 #controls button, select {
@@ -117,4 +118,9 @@ html, margin {
 
 #controls .content {
     margin: 5px;
+}
+
+#github {
+    color: #fff;
+    text-decoration: none;
 }
