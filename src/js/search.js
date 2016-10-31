@@ -43,9 +43,9 @@ function search(opt_options) {
         if (options.depthLimit && node.depth > options.depthLimit)
             return false;
 
-        // Check whether node is already expanded
-        if (!!options.expandedNodes[node.state])
-            return false;
+        // Check whether node is already expanded (with lower cost)
+        var alreadyExpandedNode = options.expandedNodes[node.state];
+        if (alreadyExpandedNode && alreadyExpandedNode.cost <= node.cost) return false;
 
         // Check whether there is a better alternative (lower-cost) in frontier list
         var alternativeNode = _.find(options.frontierList, {state: node.state});
