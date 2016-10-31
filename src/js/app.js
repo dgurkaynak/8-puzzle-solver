@@ -98,12 +98,11 @@ searchStopButton.addEventListener('click', function() {
 }, false);
 
 function searchCallback(err, options) {
-    var expandedNodesLength = Object.keys(options.expandedNodes).length;
+    var expandedNodesLength = _.size(options.expandedNodes);
     searchResultDiv.innerHTML = (err ? err : 'Solved! Depth: ' + options.node.depth) + ' <br/>' +
         ('Iteration: ' + options.iteration) + '<br/><br/>' +
-        ('Expanded nodes: ' + expandedNodesLength) + '<br/>' +
-        ('Frontier nodes: ' + options.frontierList.length) + '<br/>' +
-        ('Max frontier nodes: ' + options.maxFrontierListLength) +
+        ('Expanded nodes: ' + expandedNodesLength + ' / ' + options.maxExpandedNodesLength) + '<br/>' +
+        ('Frontier nodes: ' + options.frontierList.length + ' / ' + options.maxFrontierListLength) +
         (err ? '' : '<br/><br/><button onclick="replayWinnerNode()">Replay solution</button>');
 
     window.winnerNode = err ? null : options.node
@@ -127,12 +126,11 @@ function stepCallback(options) {
 
     Board.draw(options.node.state);
 
-    var expandedNodesLength = Object.keys(options.expandedNodes).length;
+    var expandedNodesLength = _.size(options.expandedNodes);
     searchResultDiv.innerHTML = 'Stepped <br/>' +
         ('Iteration: ' + options.iteration) + '<br/><br/>' +
-        ('Expanded nodes: ' + expandedNodesLength) + '<br/>' +
-        ('Frontier nodes: ' + options.frontierList.length) + '<br/>' +
-        ('Max frontier nodes: ' + options.maxFrontierListLength);
+        ('Expanded nodes: ' + expandedNodesLength + ' / ' + options.maxExpandedNodesLength) + '<br/>' +
+        ('Frontier nodes: ' + options.frontierList.length + ' / ' + options.maxFrontierListLength);
 
     // Draw
     if (visualizationCheckbox.checked) {

@@ -20,6 +20,7 @@ function search(opt_options) {
         stepCallback: null,
         type: SearchType.BREADTH_FIRST,
         maxFrontierListLength: 0,
+        maxExpandedNodesLength: 0,
         iterativeDeepeningIndex: 0
     }, opt_options || {});
 
@@ -32,6 +33,7 @@ function search(opt_options) {
     // Expand current node
     var expandedList = options.node.expand();
     options.expandedNodes[options.node.state] = options.node;
+    options.maxExpandedNodesLength = Math.max(options.maxExpandedNodesLength, _.size(options.expandedNodes));
 
     // Filter just-expanded nodes
     var expandedUnexploredList = expandedList.filter(function(node) {
