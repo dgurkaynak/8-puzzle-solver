@@ -3,7 +3,9 @@
 A simple web app that solves 8-puzzle game with various tree
 search techniques. It also can visualize the search tree.
 
-[Click here to see full app.](https://dgurkaynak.github.io/8-puzzle-solver/)
+Avaliable on: [https://deniz.co/8-puzzle-solver](https://deniz.co/8-puzzle-solver)
+
+[![Screenshot of 8-puzzle-solver](./screenshot.png)](https://deniz.co/8-puzzle-solver)
 
 Supported searches:
 - Breadth First
