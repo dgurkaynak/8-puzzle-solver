@@ -47,7 +47,8 @@ html, margin {
 }
 
 #controls input[type="number"] {
-    width: 97%;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 #controls .heading {
