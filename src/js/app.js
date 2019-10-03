@@ -26,7 +26,7 @@ randomizeButton.addEventListener('click', function() {
 
 customInputButton.addEventListener('click', function() {
     Board.clearReplay();
-    game.state = prompt('New game state like: "012345678"');
+    game.state = prompt('Enter game state, from top-left to right-bottom, 10 characters, e.g. "012345678"');
     Board.draw(game.state);
     searchResultDiv.innerHTML = '';
 }, false);

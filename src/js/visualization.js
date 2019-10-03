@@ -54,8 +54,8 @@ Visualization.importData = function(expandedNodes, frontierList, opt_winnerNode,
 
         data.nodes.push({
             id: node.state,//012345678
-            // label: node.state.splice(6, 0, '\n').splice(3, 0, '\n') + '\n MD: ' + node.game.getManhattanDistance(),
-            label: node.state + '\n (D:' + node.depth + ', MD:' + node.game.getManhattanDistance() + ')',
+            label: node.state.splice(6, 0, '\n').splice(3, 0, '\n'),
+            // label: node.state + '\n (D:' + node.depth + ', MD:' + node.game.getManhattanDistance() + ')',
             color: winners[node.state] ? (opt_winnerColor || '#ccff33') : color
         });
 

@@ -28,15 +28,15 @@
     </div>
     <div id="visualization"></div>
     <div id="controls">
-        <div class="heading">Game State</div>
+        <div class="heading">Board</div>
         <div class="content">
             <button id="randomize">Random</button>
-            <button id="customInput">Custom Input</button>
+            <button id="customInput">Custom State</button>
         </div>
 
         <div class="heading">Search</div>
         <div class="content">
-            <label>Type</label>
+            <label>Algorithm</label>
             <select id="searchType">
                 <option value="breadthFirst">Breadth-First</option>
                 <option value="uniformCost">Uniform-Cost</option>
@@ -49,11 +49,11 @@
             <input type="number" id="iterationLimit" value="10000">
             <label>Depth Limit</label>
             <input type="number" id="depthLimit" value="0">
-            <label>
+            <label style="display: none;">
                 <input type="checkbox" id="visualizationCheck" checked>
                 Visualization
             </label>
-            <label>
+            <label style="display: none;">
                 <input type="checkbox" id="expandedNodeCheck">
                 Early check optimization
             </label>
