@@ -35,12 +35,16 @@ Board.replay = function(moves) {
     var initialState = moves.shift();
     Board.draw(initialState);
     window.network.selectNodes([initialState]);
+    window.network.focus(initialState, { scale: 0.75 });
+    window.isReplaying = true;
+    var btn = document.getElementById('replayButton'); btn && (btn.textContent = 'Stop replaying');
 
     var animate = function(moves) {
         var move = moves.shift();
-        if (!move) return boardDiv.classList.remove('animation');
+        if (!move) return Board.clearReplay();
         Board.draw(move);
         window.network.selectNodes([move]);
+        window.network.focus(move, { scale: 0.75, animation: true });
         Board.replayAnimationTimeout = setTimeout(animate.bind(null, moves), 1000);
     };
 
@@ -54,4 +58,6 @@ Board.clearReplay = function() {
     clearTimeout(Board.replayTimeout);
     clearTimeout(Board.replayAnimationTimeout);
     boardDiv.classList.remove('animation');
+    window.isReplaying = false;
+    var btn = document.getElementById('replayButton'); btn && (btn.textContent = 'Replay solution');
 };

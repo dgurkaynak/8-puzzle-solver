@@ -111,7 +111,7 @@ function searchCallback(err, options) {
         ('Iteration: ' + options.iteration) + '<br/><br/>' +
         ('Expanded nodes: ' + expandedNodesLength + ' / ' + options.maxExpandedNodesLength) + '<br/>' +
         ('Frontier nodes: ' + options.frontierList.length + ' / ' + options.maxFrontierListLength) +
-        (err ? '' : '<br/><br/><button onclick="replayWinnerNode()">Replay solution</button>');
+        (err ? '' : '<br/><br/><button id="replayButton" onclick="replayWinnerNode()">Replay solution</button>');
 
     window.winnerNode = err ? null : options.node
 
@@ -158,6 +158,9 @@ function stepCallback(options) {
 function replayWinnerNode() {
     if (!window.winnerNode)
         return alert('Winner node could not found');
+
+    if (window.isReplaying)
+        return Board.clearReplay();
 
     Board.draw(game.state);
     setTimeout(function() {

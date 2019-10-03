@@ -10,7 +10,7 @@ Visualization.draw = function(data) {
             hierarchical: {
                 direction: 'UD',
                 sortMethod: 'directed',
-                levelSeparation: 450,
+                levelSeparation: 150,
                 nodeSpacing: 100,
 
             }
