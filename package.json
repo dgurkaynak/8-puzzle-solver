@@ -28,5 +28,8 @@
     "gulp-uglify": "^2.0.0",
     "lodash": "^4.16.4",
     "vis": "^4.16.1"
+  },
+  "dependencies": {
+    "body-scroll-lock": "^2.6.4"
   }
 }

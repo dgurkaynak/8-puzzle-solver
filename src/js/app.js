@@ -3,6 +3,7 @@ var game = new Game();
 Board.draw(game.state);
 
 var boardDiv = document.getElementById('board');
+var controlsDiv = document.getElementById('controls');
 var randomizeButton = document.getElementById('randomize');
 var customInputButton = document.getElementById('customInput');
 var searchTypeSelectbox = document.getElementById('searchType');
@@ -16,6 +17,9 @@ var searchResultDiv = document.getElementById('searchResult');
 var visualizationCheckbox = document.getElementById('visualizationCheck');
 
 var searchStepOptions = null;
+
+// Disable body scroll for mobile
+bodyScrollLock.disableBodyScroll(controlsDiv);
 
 randomizeButton.addEventListener('click', function() {
     Board.clearReplay();
@@ -46,6 +50,8 @@ searchButton.addEventListener('click', function() {
         return alert('Invalid depth limit');
 
     searchResultDiv.innerHTML = '';
+    searchButton.style.display = 'none';
+    searchStopButton.style.display = 'block';
 
     search({
         node: initialNode,
@@ -87,6 +93,8 @@ searchStepButton.addEventListener('click', function() {
 searchStopButton.addEventListener('click', function() {
     Board.clearReplay();
     searchResultDiv.innerHTML = '';
+    searchButton.style.display = 'block';
+    searchStopButton.style.display = 'none';
 
     window.searchStopped = true;
     setTimeout(function() {
@@ -106,6 +114,9 @@ function searchCallback(err, options) {
         (err ? '' : '<br/><br/><button onclick="replayWinnerNode()">Replay solution</button>');
 
     window.winnerNode = err ? null : options.node
+
+    searchButton.style.display = 'block';
+    searchStopButton.style.display = 'none';
 
     //game.state = options.node.state;
     Board.draw(options.node.state);
