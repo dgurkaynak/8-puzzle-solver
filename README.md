@@ -5,15 +5,15 @@ search techniques. It also can visualize the search tree.
 
 Avaliable on: [https://deniz.co/8-puzzle-solver](https://deniz.co/8-puzzle-solver)
 
-[![Screenshot of 8-puzzle-solver](./screenshot.png)](https://deniz.co/8-puzzle-solver)
-
-Supported searches:
+Supported search algorithms:
 - Breadth First
 - Uniform Cost
 - Depth First
 - Iterative Deepening
 - Greedy Best
 - A*
+
+[![Demo of 8-puzzle-solver](./demo.gif)](https://deniz.co/8-puzzle-solver)
 
 ## Installation
 
