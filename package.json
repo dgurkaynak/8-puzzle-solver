@@ -27,7 +27,7 @@
     "gulp-rename": "^1.2.2",
     "gulp-replace": "^1.0.0",
     "gulp-uglify": "^3.0.2",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.21",
     "vis": "^4.21.0"
   }
 }
