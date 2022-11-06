@@ -19,7 +19,7 @@
   "devDependencies": {
     "body-scroll-lock": "^2.6.4",
     "del": "^5.1.0",
-    "gulp": "^3.9.1",
+    "gulp": "^4.0.2",
     "gulp-concat": "^2.6.0",
     "gulp-html-replace": "^1.6.1",
     "gulp-html-src": "^1.0.0",
