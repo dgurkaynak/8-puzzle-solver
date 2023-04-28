@@ -15,7 +15,7 @@ var olay = (window.olay = {
   var scriptEl = document.createElement("script");
   scriptEl.type = "text/javascript";
   scriptEl.async = true;
-  scriptEl.src = "https://olay.deniz.co/client-web.js?project=8-puzzle-solver";
+  scriptEl.src = "https://deniz.co/olay/client-web.js?project=8-puzzle-solver";
 
   var s = document.getElementsByTagName("script")[0];
   // @ts-ignore
